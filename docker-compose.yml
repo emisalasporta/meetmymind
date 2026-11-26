@@ -1,0 +1,56 @@
+# MeetMyMind en el servidor: el programa y su fichero, juntos.
+#
+# El fichero (PostgreSQL) no tiene puerto abierto ni salida a internet: vive
+# en una red interna que solo comparte con el programa. Por eso entra sin
+# contraseña; quien no está dentro de esa red no lo puede ver.
+#
+# Variables que se cargan en el servidor (pestaña Environment de Dokploy):
+#   CLAVE        la clave de entrada de Emiliano (12 caracteres o más)
+#   URL_PUBLICA  la dirección con https, por ejemplo https://meetmymind.emilianosalasporta.cloud
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://meetmymind@fichero:5432/meetmymind
+      CLAVE: ${CLAVE:?Falta la variable CLAVE}
+      URL_PUBLICA: ${URL_PUBLICA:?Falta la variable URL_PUBLICA}
+      DIR_DATOS: /app/data
+      PUERTO: "3000"
+      INTERMEDIARIOS: "2"
+      ZONA_HORARIA: America/Argentina/Catamarca
+    volumes:
+      - datos:/app/data
+    depends_on:
+      fichero:
+        condition: service_healthy
+    networks:
+      - interna
+    expose:
+      - "3000"
+
+  fichero:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: meetmymind
+      POSTGRES_DB: meetmymind
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - fichero:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U meetmymind -d meetmymind"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - interna
+
+networks:
+  interna:
+    internal: true
+
+volumes:
+  datos:
+  fichero:

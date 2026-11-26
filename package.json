@@ -1,0 +1,25 @@
+{
+  "name": "meetmymind",
+  "version": "0.1.0",
+  "description": "MeetMyMind: el lugar donde vive lo que hace falta para entender a Emiliano. Web con clave y entrada para las IA.",
+  "scripts": {
+    "test": "node --test --test-concurrency=1 'test/*.test.js'",
+    "start": "node src/servidor.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "express": "^5.3.0",
+    "fflate": "^0.8.3",
+    "marked": "^18.3.0",
+    "multer": "^2.5.0",
+    "pg": "^8.23.1",
+    "sanitize-html": "^2.18.2",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.7"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "private": true
+}
