@@ -157,6 +157,10 @@ export function plural(n, uno, muchos) {
   return `${n} ${n === 1 ? uno : muchos}`;
 }
 
+// Cambia en cada arranque, así el navegador no se queda con estilos viejos
+// después de publicar una versión nueva.
+const VERSION = Date.now().toString(36);
+
 /**
  * El marco de todas las páginas.
  * `capa` tiñe la página con el color de esa capa.
@@ -172,15 +176,15 @@ export function pagina({ titulo, cuerpo, conSesion = true, capa = '', aviso = ''
 <meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="light dark">
 <title>${nombre}</title>
-<link rel="stylesheet" href="/estatico/estilo.css">
+<link rel="stylesheet" href="/estatico/estilo.css?v=${VERSION}">
 <link rel="icon" href="/estatico/icono.svg" type="image/svg+xml">
-<script src="/estatico/app.js" defer></script>
-${scripts.map((s) => h`<script src="${s}" defer></script>`)}
+<script src="/estatico/app.js?v=${VERSION}" defer></script>
+${scripts.map((s) => h`<script src="${s}?v=${VERSION}" defer></script>`)}
 </head>
 <body data-capa="${capa}">
 <a class="saltar" href="#contenido">Ir al contenido</a>
 <header class="barra">
-  <a class="marca" href="${conSesion ? '/' : '/entrar'}">MeetMyMind</a>
+  <a class="marca" href="${conSesion ? '/' : '/entrar'}" aria-label="MeetMyMind, inicio"><span>MeetMyMind</span></a>
   ${
     conSesion
       ? h`<nav class="menu" aria-label="Secciones">

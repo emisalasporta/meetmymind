@@ -23,15 +23,15 @@
   // --- colores, leídos de la hoja de estilo para que coincidan con la web ---
 
   const VARIABLE_DE_CAPA = {
-    hechos: '--ocre', vinculos: '--rosa', proyectos: '--verde',
-    gustos: '--azul', identidad: '--violeta', manual: '--grafito',
+    hechos: '--c-hechos', vinculos: '--c-vinculos', proyectos: '--c-proyectos',
+    gustos: '--c-gustos', identidad: '--c-identidad', manual: '--c-manual',
   };
   let colores = { capas: {} };
   function leerColores() {
     const estilo = getComputedStyle(document.documentElement);
     const valor = (nombre) => estilo.getPropertyValue(nombre).trim();
     colores = {
-      tinta: valor('--tinta'), suave: valor('--tinta-suave'), regla: valor('--regla-fuerte'), papel: valor('--papel'),
+      tinta: valor('--tinta'), suave: valor('--tinta-suave'), regla: valor('--linea-fuerte'), papel: valor('--superficie'),
       capas: Object.fromEntries(Object.entries(VARIABLE_DE_CAPA).map(([capa, nombre]) => [capa, valor(nombre)])),
     };
   }
@@ -138,7 +138,7 @@
     const ocupado = [];
     const libre = (r) => !ocupado.some((o) => r.x < o.x + o.w && r.x + r.w > o.x && r.y < o.y + o.h && r.y + r.h > o.y);
     const escribir = (texto, x, y, { tam = 12, peso = 600, color = colores.tinta, forzar = false } = {}) => {
-      pincel.font = `${peso} ${tam}px Archivo, system-ui, sans-serif`;
+      pincel.font = `${peso} ${tam}px Inter, system-ui, sans-serif`;
       const w = pincel.measureText(texto).width;
       const r = { x: x - w / 2 - 2, y: y - tam, w: w + 4, h: tam + 4 };
       if (!forzar && !libre(r)) return;
